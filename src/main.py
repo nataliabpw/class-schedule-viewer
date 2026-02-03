@@ -2,6 +2,8 @@ from datetime import date
 from pathlib import Path
 import pandas as pd
 
+WEEKDAYS = ['PONIEDZIAŁEK', 'WTOREK', 'ŚRODA', 'CZWARTEK', 'PIĄTEK']
+
 WEEKDAYS = ['PONIEDZIAŁEK','WTOREK','ŚRODA','CZWARTEK','PIĄTEK']
 
 def main():
@@ -10,6 +12,7 @@ def main():
 
     df = pd.read_excel(data_path)
 
+    SCHEDULE_NAME = df.columns[0]
     SCHEDULE_NAME = df.columns[0]
     print(f"Schedule Name: {SCHEDULE_NAME}")
 
