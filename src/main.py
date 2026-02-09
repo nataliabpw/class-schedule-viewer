@@ -1,6 +1,7 @@
 from datetime import datetime, date
 from pathlib import Path
 import pandas as pd
+import numpy as np
 
 WEEKDAYS = ['PONIEDZIAŁEK', 'WTOREK', 'ŚRODA', 'CZWARTEK', 'PIĄTEK']
 
@@ -37,10 +38,23 @@ def main():
     
     date_row = weekday_row + 2
     matching_date_columns = []
-    # TO-DO dodać obsługę niestandardowych dat jak np.01.paż lub cały semestr
-    # dodać obsługę scalonych komórek jak np. kolumny 2-7
     for column_id, cell in enumerate(df.iloc[date_row, weekday_start_column_id:weekday_end_column_id+1]):
+        current_column_id = column_id+weekday_start_column_id
+
+        # Obsługa kolumny typu numpy.float64
+        if isinstance(cell, (float, np.floating)):
+            col_name = df.columns[current_column_id]
+            df[col_name] = df[col_name].astype("object")
+
+        if isinstance(cell, datetime):
+            if cell.date() == date:
+                matching_date_columns.append(current_column_id)
+            continue
         cell = str(cell).strip()
+        # cell = "".join(cell.split())
+        if cell=='nan':
+            df.iloc[date_row, current_column_id] = df.iloc[date_row, current_column_id-1]
+            cell = str(df.iloc[date_row, current_column_id-1]).strip()
         DASH = '-'
         if DASH in cell:
             dash_index = cell.index(DASH)
@@ -57,13 +71,13 @@ def main():
             # (sprawdzenie czy zakres pasuje do daty)
             if start_date <= date <= end_date:
                 # (jeśli tak to zapamiętanie kolumny)
-                matching_date_columns.append(column_id+weekday_start_column_id)
+                matching_date_columns.append(current_column_id)
         elif cell=='cały semestr':
-            matching_date_columns.append(column_id+weekday_start_column_id )
+            matching_date_columns.append(current_column_id )
         elif cell != 'nan':
             date_from_cell = format_date(cell, date)
             if date_from_cell==date:
-                matching_date_columns.append(column_id+weekday_start_column_id )
+                matching_date_columns.append(current_column_id )
     print(matching_date_columns)
 
 def get_date_from_user():
@@ -72,7 +86,7 @@ def get_date_from_user():
     # month = input("Month: ")
     # year = input("Year: ")
     # return date(int(year), int(month), int(day))
-    return date(2025, 11, 3) # Hardcoded for testing
+    return date(2025, 11, 6) # Hardcoded for testing
 
 def is_next_weekday_reached(weekday_start_column_id, cell):
     if is_weekday_start_column_id_set(weekday_start_column_id) and pd.notna(cell):
@@ -94,7 +108,8 @@ def format_date(date_to_format, date_for_year):
         date_to_format = date_to_format[:id].strip()
     if date_to_format[-1]!='.':
         date_to_format += '.'
-    date_to_format += str(date_for_year.year)
+    if len(date_to_format)<10:
+        date_to_format += str(date_for_year.year)
     return datetime.strptime(date_to_format, "%d.%m.%Y").date()
 
 if __name__ == "__main__":
