@@ -55,6 +55,7 @@ def main():
         if cell=='nan':
             df.iloc[date_row, current_column_id] = df.iloc[date_row, current_column_id-1]
             cell = str(df.iloc[date_row, current_column_id-1]).strip()
+
         DASH = '-'
         if DASH in cell:
             dash_index = cell.index(DASH)
@@ -70,7 +71,11 @@ def main():
 
             # (sprawdzenie czy zakres pasuje do daty)
             if start_date <= date <= end_date:
-                # (jeśli tak to zapamiętanie kolumny)
+                # TO-DO: Obsługa komentarza "bez dd.mm"
+                if is_date_an_exception(cell, date):
+                    print(cell)
+                    continue
+                # (zapamiętanie kolumny)
                 matching_date_columns.append(current_column_id)
         elif cell=='cały semestr':
             matching_date_columns.append(current_column_id )
@@ -86,7 +91,7 @@ def get_date_from_user():
     # month = input("Month: ")
     # year = input("Year: ")
     # return date(int(year), int(month), int(day))
-    return date(2025, 11, 6) # Hardcoded for testing
+    return date(2026, 1, 5) # Hardcoded for testing
 
 def is_next_weekday_reached(weekday_start_column_id, cell):
     if is_weekday_start_column_id_set(weekday_start_column_id) and pd.notna(cell):
@@ -99,18 +104,36 @@ def is_weekday_start_column_id_set(weekday_start_column_id):
     else:
         return True
 
-def format_date(date_to_format, date_for_year):
+def is_date_an_exception(cell, date):
+    cell = cell.lower()
+    if 'bez' not in cell:
+        return False
+    BEZ_LENGTH = 3
+    bez_end_id = cell.index('bez') + BEZ_LENGTH
+    exceptions = cell[bez_end_id:]
+    date_to_check = date.strftime("%d.%m")
+    if date_to_check in exceptions:
+        return True
     # TO-DO
-    # dodać obsługę komentarza (bez xx.yy)
-    # teraz komentarz jest pomijany
+    return False
+
+def format_date(date_to_format, date_from_user):
     if date_to_format[-1]==')':
         id = date_to_format.index('(')
         date_to_format = date_to_format[:id].strip()
     if date_to_format[-1]!='.':
         date_to_format += '.'
     if len(date_to_format)<10:
-        date_to_format += str(date_for_year.year)
+        if is_date_from_user_from_next_year(date_to_format, date_from_user):
+            date_to_format += str(date_from_user.year-1)
+        else:
+            date_to_format += str(date_from_user.year)
     return datetime.strptime(date_to_format, "%d.%m.%Y").date()
+
+def is_date_from_user_from_next_year(date_to_format, date_from_user):
+    if int(date_to_format[-3:-1]) - date_from_user.month > 7:
+        return True
+    return False
 
 if __name__ == "__main__":
     main()
