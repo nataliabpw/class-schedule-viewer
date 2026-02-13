@@ -1,5 +1,6 @@
 from datetime import datetime, date
 from pathlib import Path
+from openpyxl import load_workbook
 import pandas as pd
 import numpy as np
 
@@ -7,9 +8,9 @@ WEEKDAYS = ['PONIEDZIAŁEK', 'WTOREK', 'ŚRODA', 'CZWARTEK', 'PIĄTEK']
 
 def main():
     project_root = Path(__file__).parent.parent
-    data_path = project_root / 'data' / 'example_schedule.xls'
+    data_dir = project_root / 'data'
 
-    df = pd.read_excel(data_path)
+    df = load_spreadsheet_with_merged_cells(data_dir)
 
     SCHEDULE_NAME = df.columns[0]
     print(f"Schedule Name: {SCHEDULE_NAME}")
@@ -53,7 +54,9 @@ def main():
         cell = str(cell).strip()
         # cell = "".join(cell.split())
         if cell=='nan':
-            df.iloc[date_row, current_column_id] = df.iloc[date_row, current_column_id-1]
+            for row in range(date_row-1, date_row+1):
+                df.iloc[row, current_column_id] = df.iloc[row, current_column_id-1]
+
             cell = str(df.iloc[date_row, current_column_id-1]).strip()
 
         DASH = '-'
@@ -85,6 +88,33 @@ def main():
                 matching_date_columns.append(current_column_id )
     print(matching_date_columns)
 
+    current_column_id = 2 # matching_date_columns[0]
+    print(df.iloc[6,current_column_id])
+    print(df.iloc[7,current_column_id])
+    print(df.iloc[17,current_column_id])
+    print(df.iloc[18,current_column_id])
+    print(df.shape)
+
+def load_spreadsheet_with_merged_cells(data_dir):
+    converted_data_path = data_dir / 'converted_example_schedule.xlsx'
+    df = pd.read_excel(converted_data_path)
+
+    wb = load_workbook(converted_data_path)
+    ws = wb.active # first sheet from file
+
+    for merged_range in ws.merged_cells.ranges:
+        min_row, min_col, max_row, max_col = merged_range.bounds
+
+        merged_cell_value = ws.cell(row=min_row, column=min_col).value
+        
+        df.iloc[
+            min_row-1:max_row,
+            min_col-1:max_col
+        ] = merged_cell_value
+    
+    return df
+
+
 def get_date_from_user():
     # print("Please enter a date: ")
     # day = input("Day: ")
@@ -101,8 +131,7 @@ def is_next_weekday_reached(weekday_start_column_id, cell):
 def is_weekday_start_column_id_set(weekday_start_column_id):
     if weekday_start_column_id==-1:
         return False
-    else:
-        return True
+    return True
 
 def is_date_an_exception(cell, date):
     cell = cell.lower()
