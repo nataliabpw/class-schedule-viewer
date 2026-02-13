@@ -37,7 +37,6 @@ def main():
     class_name_row = weekday_row + 1
     start_row = weekday_row + 4
     end_row = df.shape[0]
-    time_column_id = weekday_start_column_id - 2 # Hardcoded, TO-DO: detect dynamically
     group_seminaria = 'grupa 1'
     group_cwiczenia = ' 1a'
     group_zajecia = ' 1b'
@@ -52,9 +51,30 @@ def main():
             group = group_seminaria
         for row_id in range(start_row, end_row):
             cell = str(df.iloc[row_id, column_id])
-            if group in cell and cell.index(group)+len(group) < len(cell) and cell[cell.index(group)+len(group)] not in '0123456789':
-                classes[row_id-start_row] = cell
-    print(classes)
+            if group in cell:
+                if cell.index(group)+len(group) < len(cell):
+                    if cell[cell.index(group)+len(group)] in '0123456789':
+                        continue
+                classes[row_id-start_row] = df.iloc[class_name_row, column_id]+" - "+cell
+    for c in classes:
+        print(c)
+
+    time_column_id = weekday_start_column_id - 2 # Hardcoded, TO-DO: detect dynamically
+    last_class = None
+    for row_id, curr_class in enumerate(classes):
+        # wypisz koniec zajęć
+        if last_class is not None and curr_class!=last_class:
+            end_time = df.iloc[row_id+start_row-1, time_column_id]
+            end_time = end_time[end_time.index('-')+1:].strip()
+            print(f"Koniec: {end_time}")
+        # wypisz początek zajęć
+        if curr_class is not None and curr_class!=last_class:
+            print(f"Zajęcia: {curr_class}")
+            start_time = df.iloc[row_id+start_row, time_column_id]
+            start_time = start_time[:start_time.index('-')].strip()
+            print(f"Początek: {start_time}")
+        last_class = curr_class
+
 
 def load_spreadsheet_with_merged_cells(data_dir):
     # Future improvement:
