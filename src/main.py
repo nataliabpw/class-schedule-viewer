@@ -12,52 +12,91 @@ def main():
 
     df = load_spreadsheet_with_merged_cells(data_dir)
 
-    SCHEDULE_NAME = df.columns[0]
+    SCHEDULE_NAME = df.iloc[0,0]
     print(f"Schedule Name: {SCHEDULE_NAME}")
 
     date = get_date_from_user()
     weekday_id = date.weekday()  # Monday is 0 and Sunday is 6
+    
     if weekday_id > 4:
         print("No classes on weekends!")
         return
     print(f"Date: {date}\nDay of the week: {WEEKDAYS[weekday_id]}")
 
-    # TO-DO:  Detect the row containing weekdays dynamically
-    # NOTE: Currently using hardcoded row index (1), which works only for the specific format
-    weekday_row = 1
-    weekday_start_column_id = -1
-    weekday_end_column_id = df.iloc[weekday_row].size
+    # Future-improvement:  Detect the row containing weekdays dynamically
+    # urrently using hardcoded row index (1), which works only for the specific format
+    weekday_row = 2
 
-    for column_id, cell in enumerate(df.iloc[weekday_row]):
-        if str(cell).strip() == WEEKDAYS[weekday_id]:
-            weekday_start_column_id = column_id
-        elif is_next_weekday_reached(weekday_start_column_id, cell):
-            weekday_end_column_id = column_id - 3
-            break
-    
+    weekday_start_column_id, weekday_end_column_id = find_columns_for_specific_weekday(df, weekday_id, weekday_row)
     print(f"Columns: {weekday_start_column_id} - {weekday_end_column_id}")
     
     date_row = weekday_row + 2
+    matching_date_columns = find_columns_with_matching_date(df, date, weekday_start_column_id, weekday_end_column_id, date_row)
+    print(matching_date_columns)
+
+    current_column_id = 2 # matching_date_columns[0]
+
+def load_spreadsheet_with_merged_cells(data_dir):
+    # Future improvement:
+    # - try converting .xls to .xlsx using LibreOffice or other tool
+    converted_data_path = data_dir / 'converted_example_schedule.xlsx'
+    df = pd.read_excel(converted_data_path, header=None, nrows=55)
+    df = df.astype(object)
+
+    wb = load_workbook(converted_data_path)
+    ws = wb.active # first sheet from file
+
+    for merged_range in ws.merged_cells.ranges:
+        # min_col, min_row, max_col, max_row = merged_range.bounds
+
+        merged_cell_value = ws.cell(row=merged_range.min_row, column=merged_range.min_col).value
+        
+        row_start = merged_range.min_row - 1
+        row_end   = merged_range.max_row
+        col_start = merged_range.min_col - 1
+        col_end   = merged_range.max_col
+
+        # zabezpieczenie przed wyjściem poza zakres df
+        if row_end <= df.shape[0] and col_end <= df.shape[1]:
+            df.iloc[
+                row_start:row_end,
+                col_start:col_end
+            ] = merged_cell_value
+    return df
+
+
+def get_date_from_user():
+    # print("Please enter a date: ")
+    # day = input("Day: ")
+    # month = input("Month: ")
+    # year = input("Year: ")
+    # return date(int(year), int(month), int(day))
+    return date(2025, 11, 3) # Hardcoded for testing
+
+def find_columns_for_specific_weekday(df, weekday_id, weekday_row):
+    weekday_start_column_id = -1
+    weekday_end_column_id = df.iloc[weekday_row].size-1
+
+    for column_id, cell in enumerate(df.iloc[weekday_row]):
+        if str(cell).strip() == WEEKDAYS[weekday_id] and not is_weekday_start_column_id_set(weekday_start_column_id):
+            weekday_start_column_id = column_id
+        elif is_weekday_start_column_id_set(weekday_start_column_id) and weekday_id==4:
+            return weekday_start_column_id, weekday_end_column_id
+        elif is_next_weekday_reached(weekday_start_column_id, cell, weekday_id):
+            weekday_end_column_id = column_id - 3
+            return weekday_start_column_id, weekday_end_column_id
+    return weekday_start_column_id, weekday_end_column_id
+
+def find_columns_with_matching_date(df, date, weekday_start_column_id, weekday_end_column_id, date_row):
     matching_date_columns = []
     for column_id, cell in enumerate(df.iloc[date_row, weekday_start_column_id:weekday_end_column_id+1]):
         current_column_id = column_id+weekday_start_column_id
-
-        # Obsługa kolumny typu numpy.float64
-        if isinstance(cell, (float, np.floating)):
-            col_name = df.columns[current_column_id]
-            df[col_name] = df[col_name].astype("object")
 
         if isinstance(cell, datetime):
             if cell.date() == date:
                 matching_date_columns.append(current_column_id)
             continue
         cell = str(cell).strip()
-        # cell = "".join(cell.split())
-        if cell=='nan':
-            for row in range(date_row-1, date_row+1):
-                df.iloc[row, current_column_id] = df.iloc[row, current_column_id-1]
-
-            cell = str(df.iloc[date_row, current_column_id-1]).strip()
 
         DASH = '-'
         if DASH in cell:
@@ -86,45 +125,10 @@ def main():
             date_from_cell = format_date(cell, date)
             if date_from_cell==date:
                 matching_date_columns.append(current_column_id )
-    print(matching_date_columns)
+    return matching_date_columns
 
-    current_column_id = 2 # matching_date_columns[0]
-    print(df.iloc[6,current_column_id])
-    print(df.iloc[7,current_column_id])
-    print(df.iloc[17,current_column_id])
-    print(df.iloc[18,current_column_id])
-    print(df.shape)
-
-def load_spreadsheet_with_merged_cells(data_dir):
-    converted_data_path = data_dir / 'converted_example_schedule.xlsx'
-    df = pd.read_excel(converted_data_path)
-
-    wb = load_workbook(converted_data_path)
-    ws = wb.active # first sheet from file
-
-    for merged_range in ws.merged_cells.ranges:
-        min_row, min_col, max_row, max_col = merged_range.bounds
-
-        merged_cell_value = ws.cell(row=min_row, column=min_col).value
-        
-        df.iloc[
-            min_row-1:max_row,
-            min_col-1:max_col
-        ] = merged_cell_value
-    
-    return df
-
-
-def get_date_from_user():
-    # print("Please enter a date: ")
-    # day = input("Day: ")
-    # month = input("Month: ")
-    # year = input("Year: ")
-    # return date(int(year), int(month), int(day))
-    return date(2026, 1, 5) # Hardcoded for testing
-
-def is_next_weekday_reached(weekday_start_column_id, cell):
-    if is_weekday_start_column_id_set(weekday_start_column_id) and pd.notna(cell):
+def is_next_weekday_reached(weekday_start_column_id, cell, weekday_id):
+    if is_weekday_start_column_id_set(weekday_start_column_id) and str(cell).strip() == WEEKDAYS[weekday_id+1]:
         return True
     return False
 
@@ -143,7 +147,6 @@ def is_date_an_exception(cell, date):
     date_to_check = date.strftime("%d.%m")
     if date_to_check in exceptions:
         return True
-    # TO-DO
     return False
 
 def format_date(date_to_format, date_from_user):
