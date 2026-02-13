@@ -34,7 +34,27 @@ def main():
     matching_date_columns = find_columns_with_matching_date(df, date, weekday_start_column_id, weekday_end_column_id, date_row)
     print(matching_date_columns)
 
-    current_column_id = 2 # matching_date_columns[0]
+    class_name_row = weekday_row + 1
+    start_row = weekday_row + 4
+    end_row = df.shape[0]
+    time_column_id = weekday_start_column_id - 2 # Hardcoded, TO-DO: detect dynamically
+    group_seminaria = 'grupa 1'
+    group_cwiczenia = ' 1a'
+    group_zajecia = ' 1b'
+    classes = [None] * (end_row - start_row)
+
+    for column_id in matching_date_columns:
+        if 'ćwiczenia' in df.iloc[class_name_row, column_id].lower():
+            group = group_cwiczenia
+        elif 'zajęcia praktyczne' in df.iloc[class_name_row, column_id].lower():
+            group = group_zajecia
+        else:
+            group = group_seminaria
+        for row_id in range(start_row, end_row):
+            cell = str(df.iloc[row_id, column_id])
+            if group in cell and cell.index(group)+len(group) < len(cell) and cell[cell.index(group)+len(group)] not in '0123456789':
+                classes[row_id-start_row] = cell
+    print(classes)
 
 def load_spreadsheet_with_merged_cells(data_dir):
     # Future improvement:
