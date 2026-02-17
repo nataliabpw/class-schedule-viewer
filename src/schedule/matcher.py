@@ -1,6 +1,7 @@
 from datetime import datetime
+from schedule.constants import WEEKDAYS
 
-def find_columns_for_specific_weekday(df, weekday_id, weekday_row, WEEKDAYS):
+def find_columns_for_specific_weekday(df, weekday_id, weekday_row):
     weekday_start_column_id = -1
     weekday_end_column_id = df.iloc[weekday_row].size-1
 

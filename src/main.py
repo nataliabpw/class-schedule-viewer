@@ -3,8 +3,7 @@ from pathlib import Path
 from schedule.reader import load_spreadsheet_with_merged_cells
 from schedule.matcher import find_columns_for_specific_weekday, find_columns_with_matching_date, is_next_weekday_reached, is_weekday_start_column_id_set
 from schedule.builder import build_group_schedule, format_schedule_with_time
-
-WEEKDAYS = ['PONIEDZIAŁEK', 'WTOREK', 'ŚRODA', 'CZWARTEK', 'PIĄTEK']
+from schedule.constants import WEEKDAYS
 
 def main():
     project_root = Path(__file__).parent.parent
@@ -24,12 +23,13 @@ def main():
         print("Brak zajęć w weekend!")
         return
     
-    print(f"Data: {selected_date}\nDzień tygodnia: {WEEKDAYS[weekday_id]}")
+    print(f"Data: {selected_date}")
+    print(f"Dzień tygodnia: {WEEKDAYS[weekday_id]}")
 
     # Future-improvement:  Detect the weekday_row containing weekdays dynamically
     weekday_row = 2
 
-    weekday_start_column_id, weekday_end_column_id = find_columns_for_specific_weekday(df, weekday_id, weekday_row, WEEKDAYS)
+    weekday_start_column_id, weekday_end_column_id = find_columns_for_specific_weekday(df, weekday_id, weekday_row)
     
     date_row = weekday_row + 2
     matching_date_columns = find_columns_with_matching_date(df, selected_date, weekday_start_column_id, weekday_end_column_id, date_row)
