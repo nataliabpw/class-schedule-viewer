@@ -2,6 +2,7 @@ from datetime import date
 from pathlib import Path
 from schedule.reader import load_spreadsheet_with_merged_cells
 from schedule.matcher import find_columns_for_specific_weekday, find_columns_with_matching_date, is_next_weekday_reached, is_weekday_start_column_id_set
+from schedule.builder import build_group_schedule, format_schedule_with_time
 
 WEEKDAYS = ['PONIEDZIAŁEK', 'WTOREK', 'ŚRODA', 'CZWARTEK', 'PIĄTEK']
 
@@ -45,7 +46,9 @@ def main():
     else:
         time_column_id = weekday_start_column_id - 1 
 
-    print_schedule_with_time(classes, df, start_row, time_column_id)
+    schedule = format_schedule_with_time(classes, df, start_row, time_column_id)
+    for entry in schedule:
+        print(entry)
 
 def get_date_from_user():
     # print("Please enter a date: ")
@@ -73,41 +76,6 @@ def get_group_names_from_user():
 
     # return group_seminaria, group_cwiczenia, group_zajecia
     return 'grupa 1', ' 1a', ' 1a' # Hardcoded for testing
-
-def build_group_schedule(class_name_row, start_row, end_row, matching_date_columns, df, group_seminaria, group_cwiczenia, group_zajecia):
-    classes = [None] * (end_row - start_row)
-
-    for column_id in matching_date_columns:
-        if 'ćwiczenia' in df.iloc[class_name_row, column_id].lower():
-            group = group_cwiczenia
-        elif 'zajęcia praktyczne' in df.iloc[class_name_row, column_id].lower():
-            group = group_zajecia
-        else:
-            group = group_seminaria
-        for row_id in range(start_row, end_row):
-            cell = str(df.iloc[row_id, column_id]).strip()
-            if group in cell:
-                if cell.index(group)+len(group) < len(cell):
-                    if cell[cell.index(group)+len(group)] in '0123456789':
-                        continue
-                classes[row_id-start_row] = df.iloc[class_name_row, column_id].strip()+" - "+cell
-    return classes
-
-def print_schedule_with_time(classes, df, start_row, time_column_id):
-    last_class = None
-    for row_id, curr_class in enumerate(classes):
-
-        if last_class is not None and curr_class!=last_class:
-            end_time = df.iloc[row_id+start_row-1, time_column_id]
-            end_time = end_time[end_time.index('-')+1:].strip()
-            print(f"Koniec: {end_time}")
-
-        if curr_class is not None and curr_class!=last_class:
-            print(f"Zajęcia: {curr_class}")
-            start_time = df.iloc[row_id+start_row, time_column_id]
-            start_time = start_time[:start_time.index('-')].strip()
-            print(f"Początek: {start_time}")
-        last_class = curr_class
 
 if __name__ == "__main__":
     main()
