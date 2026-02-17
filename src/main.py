@@ -26,7 +26,7 @@ def main():
     
     print(f"Data: {selected_date}\nDzień tygodnia: {WEEKDAYS[weekday_id]}")
 
-    # Future-improvement:  Detect the row containing weekdays dynamically
+    # Future-improvement:  Detect the weekday_row containing weekdays dynamically
     weekday_row = 2
 
     weekday_start_column_id, weekday_end_column_id = find_columns_for_specific_weekday(df, weekday_id, weekday_row)
@@ -40,7 +40,7 @@ def main():
 
     classes = build_group_schedule(class_name_row, start_row, end_row, matching_date_columns, df, group_seminaria, group_cwiczenia, group_zajecia)
 
-    # Hardcoded, Future-improvement: detect dynamically
+    # Future-improvement: detect time_column_id dynamically
     if weekday_id==0:
         time_column_id = weekday_start_column_id - 2
     else:
@@ -60,7 +60,6 @@ def load_spreadsheet_with_merged_cells(data_dir):
     ws = wb.active # first sheet from file
 
     for merged_range in ws.merged_cells.ranges:
-        # min_col, min_row, max_col, max_row = merged_range.bounds
 
         merged_cell_value = ws.cell(row=merged_range.min_row, column=merged_range.min_col).value
         
@@ -69,7 +68,7 @@ def load_spreadsheet_with_merged_cells(data_dir):
         col_start = merged_range.min_col - 1
         col_end   = merged_range.max_col
 
-        # zabezpieczenie przed wyjściem poza zakres df
+        # df out-of-bounds protection
         if row_end <= df.shape[0] and col_end <= df.shape[1]:
             df.iloc[
                 row_start:row_end,
@@ -135,25 +134,22 @@ def find_columns_with_matching_date(df, selected_date, weekday_start_column_id, 
             start_date = cell[0:dash_index].strip()
             end_date = cell[dash_index+1:].strip()
 
-            # zamiana str na datę
-            start_date = format_date(start_date, selected_date)
-            end_date = format_date(end_date, selected_date)
-            # obsługa stycznia
+            start_date = parse_date(start_date, selected_date)
+            end_date = parse_date(end_date, selected_date)
+
+            # handle January case
             if start_date>end_date:
                 end_date = end_date.replace(year=end_date.year + 1)
 
-            # (sprawdzenie czy zakres pasuje do daty)
             if start_date <= selected_date <= end_date:
-                # TO-DO: Obsługa komentarza "bez dd.mm"
                 if is_date_an_exception(cell, selected_date):
                     print(cell)
                     continue
-                # (zapamiętanie kolumny)
                 matching_date_columns.append(current_column_id)
         elif cell=='cały semestr':
             matching_date_columns.append(current_column_id )
         elif cell != 'nan':
-            date_from_cell = format_date(cell, selected_date)
+            date_from_cell = parse_date(cell, selected_date)
             if date_from_cell==selected_date:
                 matching_date_columns.append(current_column_id )
     return matching_date_columns
@@ -180,21 +176,21 @@ def is_date_an_exception(cell, selected_date):
         return True
     return False
 
-def format_date(date_to_format, selected_date):
-    if date_to_format[-1]==')':
-        id = date_to_format.index('(')
-        date_to_format = date_to_format[:id].strip()
-    if date_to_format[-1]!='.':
-        date_to_format += '.'
-    if len(date_to_format)<10:
-        if is_selected_date_from_next_year(date_to_format, selected_date):
-            date_to_format += str(selected_date.year-1)
+def parse_date(date_string, reference_date):
+    if date_string[-1]==')':
+        id = date_string.index('(')
+        date_string = date_string[:id].strip()
+    if date_string[-1]!='.':
+        date_string += '.'
+    if len(date_string)<10:
+        if is_reference_date_from_next_year(date_string, reference_date):
+            date_string += str(reference_date.year-1)
         else:
-            date_to_format += str(selected_date.year)
-    return datetime.strptime(date_to_format, "%d.%m.%Y").date()
+            date_string += str(reference_date.year)
+    return datetime.strptime(date_string, "%d.%m.%Y").date()
 
-def is_selected_date_from_next_year(date_to_format, selected_date):
-    if int(date_to_format[-3:-1]) - selected_date.month > 7:
+def is_reference_date_from_next_year(date_to_format, reference_date):
+    if int(date_to_format[-3:-1]) - reference_date.month > 7:
         return True
     return False
 
@@ -220,12 +216,12 @@ def build_group_schedule(class_name_row, start_row, end_row, matching_date_colum
 def print_schedule_with_time(classes, df, start_row, time_column_id):
     last_class = None
     for row_id, curr_class in enumerate(classes):
-        # wypisz koniec zajęć
+
         if last_class is not None and curr_class!=last_class:
             end_time = df.iloc[row_id+start_row-1, time_column_id]
             end_time = end_time[end_time.index('-')+1:].strip()
             print(f"Koniec: {end_time}")
-        # wypisz początek zajęć
+
         if curr_class is not None and curr_class!=last_class:
             print(f"Zajęcia: {curr_class}")
             start_time = df.iloc[row_id+start_row, time_column_id]
