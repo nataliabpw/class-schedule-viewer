@@ -39,7 +39,7 @@ def main():
     end_row = df.shape[0]
 
     classes = build_group_schedule(class_name_row, start_row, end_row, matching_date_columns, df, group_seminaria, group_cwiczenia, group_zajecia)
-
+    
     # Future-improvement: detect time_column_id dynamically
     if weekday_id==0:
         time_column_id = weekday_start_column_id - 2

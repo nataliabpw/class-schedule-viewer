@@ -5,7 +5,7 @@ def load_spreadsheet_with_merged_cells(data_dir):
     # Future improvement:
     # - try converting .xls to .xlsx using LibreOffice or other tool
     converted_data_path = data_dir / 'converted_example_schedule.xlsx'
-    df = pd.read_excel(converted_data_path, header=None, nrows=55)
+    df = pd.read_excel(converted_data_path, header=None, nrows=57)
     df = df.astype(object)
 
     wb = load_workbook(converted_data_path)
@@ -26,4 +26,7 @@ def load_spreadsheet_with_merged_cells(data_dir):
                 row_start:row_end,
                 col_start:col_end
             ] = merged_cell_value
+        elif str(merged_range)[:2]=='GB': 
+            print(f"Warning: merged cell range {merged_range} is out of bounds for the dataframe and will be skipped.")
+            print(f"rows {row_start}-{row_end}, columns {col_start}-{col_end}")
     return df
