@@ -35,13 +35,12 @@ def find_columns_with_matching_date(df, selected_date, weekday_start_column_id, 
             start_date = parse_date(start_date, selected_date)
             end_date = parse_date(end_date, selected_date)
 
-            # handle January case
+            # handle case like 7.11 - 16.01 while looking for 14.11
             if start_date>end_date:
                 end_date = end_date.replace(year=end_date.year + 1)
 
             if start_date <= selected_date <= end_date:
                 if is_date_an_exception(cell, selected_date):
-                    print(cell)
                     continue
                 matching_date_columns.append(current_column_id)
         elif cell=='cały semestr':
@@ -75,13 +74,14 @@ def is_date_an_exception(cell, selected_date):
     return False
 
 def parse_date(date_string, reference_date):
-    if date_string[-1]==')':
+    if date_string[-1]==')':    # handle exception like 7.11 - 28.11 (bez 14.11)
         id = date_string.index('(')
         date_string = date_string[:id].strip()
     if date_string[-1]!='.':
         date_string += '.'
     if len(date_string)<10:
-        if is_reference_date_from_next_year(date_string, reference_date):
+        if is_reference_date_from_next_year(date_string, reference_date): 
+            # handle case like 7.11 - 16.01 while looking for 09.01
             date_string += str(reference_date.year-1)
         else:
             date_string += str(reference_date.year)

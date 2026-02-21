@@ -2,3 +2,4 @@ pandas
 xlrd
 numpy
 openpyxl
+pytest
