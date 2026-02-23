@@ -3,3 +3,4 @@ xlrd
 numpy
 openpyxl
 pytest
+flask

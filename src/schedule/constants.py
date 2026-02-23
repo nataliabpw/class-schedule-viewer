@@ -3,5 +3,7 @@ WEEKDAYS = (
     'WTOREK', 
     'ŚRODA', 
     'CZWARTEK', 
-    'PIĄTEK'
+    'PIĄTEK',
+    'SOBOTA',
+    'NIEDZIELA'
 )
