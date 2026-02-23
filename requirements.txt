@@ -1,6 +1,4 @@
 pandas
-xlrd
-numpy
 openpyxl
-pytest
 flask
+gunicorn
