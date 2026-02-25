@@ -1,9 +1,9 @@
 from datetime import date
 from pathlib import Path
-from schedule.reader import load_spreadsheet_with_merged_cells
-from schedule.matcher import find_columns_for_specific_weekday, find_columns_with_matching_date, is_next_weekday_reached, is_weekday_start_column_id_set
-from schedule.builder import build_group_schedule, format_schedule_with_time
-from schedule.constants import WEEKDAYS
+from src.schedule.reader import load_spreadsheet_with_merged_cells
+from src.schedule.matcher import find_columns_for_specific_weekday, find_columns_with_matching_date, is_next_weekday_reached, is_weekday_start_column_id_set
+from src.schedule.builder import build_group_schedule, format_schedule_with_time
+from src.schedule.constants import WEEKDAYS
 
 def main():
     project_root = Path(__file__).parent.parent
@@ -56,7 +56,7 @@ def get_date_from_user():
     # month = input("Month: ")
     # year = input("Year: ")
     # return date(int(year), int(month), int(day))
-    return date(2025, 11, 7) # Hardcoded for testing
+    return date(2025, 11, 4) # Hardcoded for testing
 
 def get_group_names_from_user():
     # print("Wprowadź grupy zajęć lub pozostaw puste, jeśli chcesz użyć domyślnych wartości:")

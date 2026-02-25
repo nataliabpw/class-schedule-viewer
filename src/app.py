@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from datetime import datetime
-from schedule.service import get_schedule_for_date_and_groups
+from src.schedule.service import get_schedule_for_date_and_groups
 
 app = Flask(__name__)
 

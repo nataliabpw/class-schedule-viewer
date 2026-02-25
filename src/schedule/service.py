@@ -1,8 +1,8 @@
 from pathlib import Path
-from schedule.reader import load_spreadsheet_with_merged_cells
-from schedule.matcher import find_columns_for_specific_weekday, find_columns_with_matching_date, is_next_weekday_reached, is_weekday_start_column_id_set
-from schedule.builder import build_group_schedule, format_schedule_with_time
-from schedule.constants import WEEKDAYS
+from .reader import load_spreadsheet_with_merged_cells
+from .matcher import find_columns_for_specific_weekday, find_columns_with_matching_date, is_next_weekday_reached, is_weekday_start_column_id_set
+from .builder import build_group_schedule, format_schedule_with_time
+from .constants import WEEKDAYS
 
 def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwiczenia, group_zajecia):
     project_root = Path(__file__).parent.parent.parent

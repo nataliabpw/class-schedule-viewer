@@ -1,5 +1,5 @@
 from datetime import datetime
-from schedule.constants import WEEKDAYS
+from .constants import WEEKDAYS
 
 def find_columns_for_specific_weekday(df, weekday_id, weekday_row):
     weekday_start_column_id = -1
