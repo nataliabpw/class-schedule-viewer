@@ -1,8 +1,12 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from datetime import datetime
 from src.schedule.service import get_schedule_for_date_and_groups
 
 app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return render_template("index.html")
 
 @app.route("/schedule", methods=["GET"])
 def get_schedule():
