@@ -16,12 +16,14 @@
                 <th>Start</th>
                 <th>Koniec</th>
                 <th>Zajęcia</th>
+                <th>Dodatkowe informacje</th>
             </tr>
             {% for entry in schedule_data.schedule %}
             <tr>
                 <td>{{ entry.start }}</td>
                 <td>{{ entry.end }}</td>
                 <td>{{ entry.name }}</td>
+                <td>{{ entry.info}}</td>
             </tr>
             {% endfor %}
         </table>
