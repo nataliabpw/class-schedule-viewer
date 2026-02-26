@@ -12,7 +12,7 @@ def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwicz
 
     schedule_name = df.iloc[0,0]
 
-    group_seminaria = 'grupa ' + group_seminaria
+    group_seminaria = 'grupa ' + str(group_seminaria)
     group_cwiczenia = ' ' + group_cwiczenia
     group_zajecia = ' ' + group_zajecia
 
