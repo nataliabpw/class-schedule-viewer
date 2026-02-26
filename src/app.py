@@ -25,7 +25,8 @@ def get_schedule():
 
     schedule_data = get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwiczenia, group_zajecia)
 
-    return jsonify(schedule_data)
+    # return jsonify(schedule_data)
+    return render_template("schedule.html", schedule_data=schedule_data)
 
 if __name__ == "__main__":
     app.run(debug=False)
