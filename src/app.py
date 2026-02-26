@@ -6,11 +6,13 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    last_group = 17
+    groups = range(1, last_group + 1) 
+    return render_template("index.html", groups=groups)
 
 @app.route("/schedule", methods=["GET"])
 def get_schedule():
-    date_str = request.args.get("date")
+    date_str = request.args.get("selected_date")
     group_seminaria = request.args.get("group_seminaria")
     group_cwiczenia = request.args.get("group_cwiczenia")
     group_zajecia = request.args.get("group_zajecia")
@@ -29,4 +31,4 @@ def get_schedule():
     return render_template("schedule.html", schedule_data=schedule_data)
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)

@@ -8,19 +8,23 @@
 <body>
     <h2>{{ schedule_data.schedule_name }}</h2>
     <h3>{{ schedule_data.selected_date }} - {{ schedule_data.weekday }}</h3>
-    <table>
-        <tr>
-            <th>Start</th>
-            <th>Koniec</th>
-            <th>Zajęcia</th>
-        </tr>
-        {% for entry in schedule_data.schedule %}
-        <tr>
-            <td>{{ entry.start }}</td>
-            <td>{{ entry.end }}</td>
-            <td>{{ entry.name }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    {% if schedule_data.schedule|length == 0 %}
+        <p>Brak zajęć w tym dniu.</p>
+    {% else %}
+        <table>
+            <tr>
+                <th>Start</th>
+                <th>Koniec</th>
+                <th>Zajęcia</th>
+            </tr>
+            {% for entry in schedule_data.schedule %}
+            <tr>
+                <td>{{ entry.start }}</td>
+                <td>{{ entry.end }}</td>
+                <td>{{ entry.name }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
 </body>
 </html>

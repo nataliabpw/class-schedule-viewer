@@ -20,8 +20,9 @@ def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwicz
     
     if weekday_id > 4:
         return {
-            "weekday": WEEKDAYS[weekday_id],
             "schedule_name": schedule_name,
+            "selected_date": selected_date.strftime("%Y-%m-%d"),
+            "weekday": WEEKDAYS[weekday_id],
             "schedule": []
         }
 

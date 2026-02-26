@@ -6,6 +6,64 @@
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-    <h1>Aplikacja odczytująca plan zajęć - dostępna wkrótce...</h1>
+    <form action="{{ url_for('get_schedule') }}" method="GET">
+        <label>Data:</label>
+            <input type="date" name="selected_date">
+        <br/>
+        <label>Grupa seminaryjna:</label>
+        <select name="group_seminaria">
+            <option value="">--</option>
+            {% for group in groups %}
+                <option value={{group}}>{{group}}</option>
+            {% endfor %}
+        </select>
+        <br/>
+        <label>Grupa ćwiczeniowa:</label>
+        <select name="group_cwiczenia">
+            <option value="">-- wybierz najpierw grupę seminaryjną--</option>
+        </select>
+        <br/>
+        <label>Grupa zajęć praktycznych:</label>
+        <select name="group_zajecia">
+            <option value="">-- wybierz najpierw grupę seminaryjną--</option>
+        </select>
+        <br/>
+        <button type="submit">Zobacz plan</button>
+    </form>
+<script>
+    const groupSeminariaSelect = document.querySelector('select[name="group_seminaria"]');
+    const groupCwiczeniaSelect = document.querySelector('select[name="group_cwiczenia"]');
+    const groupZajeciaSelect = document.querySelector('select[name="group_zajecia"]');
+
+    groupSeminariaSelect.addEventListener('change', function() {
+        const selectedGroup = this.value;
+        
+        groupCwiczeniaSelect.innerHTML = "";
+        groupZajeciaSelect.innerHTML = "";
+
+        if (!selectedGroup) {
+            groupCwiczeniaSelect.innerHTML = '<option value="">-- wybierz najpierw grupę seminaryjną--</option>';
+            groupZajeciaSelect.innerHTML = '<option value="">-- wybierz najpierw grupę seminaryjną--</option>';
+            return;
+        }
+
+        const lettersCwiczenia = ["a", "b"];
+        const lettersZajecia = ["a", "b", "c"];
+
+        lettersCwiczenia.forEach( letter => {
+            const option = document.createElement('option');
+            option.value = selectedGroup + letter;
+            option.textContent = selectedGroup + letter;
+            groupCwiczeniaSelect.appendChild(option);
+        })
+
+        lettersZajecia.forEach( letter => {
+            const option = document.createElement('option');
+            option.value = selectedGroup + letter;
+            option.textContent = selectedGroup + letter;
+            groupZajeciaSelect.appendChild(option);
+        })
+    });
+</script>
 </body>
 </html>
