@@ -6,34 +6,40 @@
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
+    {% if errors %}
+        <p style="color: red;">{{ errors }}</p>
+    {% endif %}
     <form action="{{ url_for('get_schedule') }}" method="GET">
         <label>Data:</label>
-            <input type="date" name="selected_date">
+            <input type="date" name="selected_date" value="{{selected_date or ''}}">
         <br/>
         <label>Grupa seminaryjna:</label>
-        <select name="group_seminaria">
+        <select name="group_seminaria" id="group-seminaria">
             <option value="">--</option>
             {% for group in groups %}
-                <option value={{group}}>{{group}}</option>
+                <option value="{{group}}" {% if group == selected_group_seminaria %} selected {% endif %}>{{group}}</option>
             {% endfor %}
         </select>
         <br/>
         <label>Grupa ćwiczeniowa:</label>
-        <select name="group_cwiczenia">
+        <select name="group_cwiczenia" id="group-cwiczenia">
             <option value="">-- wybierz najpierw grupę seminaryjną--</option>
         </select>
         <br/>
         <label>Grupa zajęć praktycznych:</label>
-        <select name="group_zajecia">
+        <select name="group_zajecia" id="group-zajecia">
             <option value="">-- wybierz najpierw grupę seminaryjną--</option>
         </select>
         <br/>
         <button type="submit">Zobacz plan</button>
     </form>
 <script>
-    const groupSeminariaSelect = document.querySelector('select[name="group_seminaria"]');
-    const groupCwiczeniaSelect = document.querySelector('select[name="group_cwiczenia"]');
-    const groupZajeciaSelect = document.querySelector('select[name="group_zajecia"]');
+    const selectedCwiczenia = "{{ selected_group_cwiczenia or '' }}";
+    const selectedZajecia = "{{ selected_group_zajecia or '' }}";
+
+    const groupSeminariaSelect = document.getElementById('group-seminaria');
+    const groupCwiczeniaSelect = document.getElementById('group-cwiczenia');
+    const groupZajeciaSelect = document.getElementById('group-zajecia');
 
     groupSeminariaSelect.addEventListener('change', function() {
         const selectedGroup = this.value;
@@ -54,6 +60,11 @@
             const option = document.createElement('option');
             option.value = selectedGroup + letter;
             option.textContent = selectedGroup + letter;
+
+            if (option.value === selectedCwiczenia) {
+                option.selected = true;
+            }
+
             groupCwiczeniaSelect.appendChild(option);
         })
 
@@ -61,9 +72,18 @@
             const option = document.createElement('option');
             option.value = selectedGroup + letter;
             option.textContent = selectedGroup + letter;
+            
+            if (option.value === selectedZajecia) {
+                option.selected = true;
+            }
+
             groupZajeciaSelect.appendChild(option);
         })
     });
+
+    if (groupSeminariaSelect.value) {
+        groupSeminariaSelect.dispatchEvent(new Event('change'));
+    }
 </script>
 </body>
 </html>
