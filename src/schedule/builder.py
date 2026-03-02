@@ -1,3 +1,5 @@
+import pandas as pd
+
 def build_group_schedule(class_name_row, start_row, end_row, matching_date_columns, df, group_seminaria, group_cwiczenia, group_zajecia):
     classes = [None] * (end_row - start_row)
 
@@ -47,3 +49,10 @@ def format_schedule_with_time(classes, df, start_row, time_column_id):
         last_class = curr_class
         last_class_info = curr_class_entry["location"] if curr_class_entry is not None else None
     return schedule
+
+def build_classroom_schedule(data_dir):
+    converted_data_path = data_dir / 'converted_example_schedule.xlsx'
+    df = pd.read_excel(converted_data_path, header=None, skiprows=58, usecols=[0])
+    df = df.dropna()                            
+    class_schedule = df.iloc[:-1,0].tolist()
+    return class_schedule

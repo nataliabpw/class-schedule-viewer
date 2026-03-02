@@ -1,7 +1,7 @@
 from pathlib import Path
 from .reader import load_spreadsheet_with_merged_cells
 from .matcher import find_columns_for_specific_weekday, find_columns_with_matching_date, is_next_weekday_reached, is_weekday_start_column_id_set
-from .builder import build_group_schedule, format_schedule_with_time
+from .builder import build_group_schedule, format_schedule_with_time, build_classroom_schedule
 from .constants import WEEKDAYS
 
 def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwiczenia, group_zajecia):
@@ -48,9 +48,12 @@ def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwicz
 
     schedule = format_schedule_with_time(classes, df, start_row, time_column_id)
 
+    class_schedule = build_classroom_schedule(data_dir)
+
     return {
     "schedule_name": schedule_name,
     "selected_date": selected_date.strftime("%Y-%m-%d"),
     "weekday": WEEKDAYS[weekday_id],
-    "schedule": schedule
+    "schedule": schedule,
+    "class_schedule": class_schedule
     }
