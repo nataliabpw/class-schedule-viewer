@@ -12,93 +12,105 @@ def home():
     return render_template(
         "index.html", 
         groups=groups, 
-        selected_date=None, 
-        selected_group_seminaria=None, 
-        selected_group_cwiczenia=None, 
-        selected_group_zajecia=None
     )
 
-@app.route("/schedule", methods=["GET"])
-def get_schedule():
-    date_str = request.args.get("selected_date")
-    group_seminaria = request.args.get("group_seminaria", type=int)
-    group_cwiczenia = request.args.get("group_cwiczenia")
-    group_zajecia = request.args.get("group_zajecia")
+# @app.route("/schedule", methods=["GET"])
+# def get_schedule():
+#     date_str = request.args.get("selected_date")
+#     group_seminaria = request.args.get("group_seminaria", type=int)
+#     group_cwiczenia = request.args.get("group_cwiczenia")
+#     group_zajecia = request.args.get("group_zajecia")
 
-    if not date_str or not group_seminaria or not group_cwiczenia or not group_zajecia:
-        return render_template(
-            "index.html", 
-            errors = "Wybierz wszystkie parametry zapytania!", 
-            groups=groups,
-            selected_date=date_str,
-            selected_group_seminaria=group_seminaria,
-            selected_group_cwiczenia=group_cwiczenia,
-            selected_group_zajecia=group_zajecia
-        ), 400
+#     if not date_str or not group_seminaria or not group_cwiczenia or not group_zajecia:
+#         return render_template(
+#             "index.html", 
+#             errors = "Wybierz wszystkie parametry zapytania!", 
+#             groups=groups,
+#             selected_date=date_str,
+#             selected_group_seminaria=group_seminaria,
+#             selected_group_cwiczenia=group_cwiczenia,
+#             selected_group_zajecia=group_zajecia
+#         ), 400
 
-    try:
-        selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
-    except ValueError:
-        return render_template(
-            "index.html", 
-            errors = "Błąd przetwarzania daty", 
-            groups=groups, 
-            selected_date=date_str,
-            selected_group_seminaria=group_seminaria,
-            selected_group_cwiczenia=group_cwiczenia,
-            selected_group_zajecia=group_zajecia
-        ), 400
+#     try:
+#         selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+#     except ValueError:
+#         return render_template(
+#             "index.html", 
+#             errors = "Błąd przetwarzania daty", 
+#             groups=groups, 
+#             selected_date=date_str,
+#             selected_group_seminaria=group_seminaria,
+#             selected_group_cwiczenia=group_cwiczenia,
+#             selected_group_zajecia=group_zajecia
+#         ), 400
 
-    if not (1 <= int(group_seminaria) <= LAST_GROUP):
-        return render_template(
-            "index.html", 
-            errors = "Niepoprawna grupa seminaryjna!", 
-            groups=groups,
-            selected_date=date_str,
-            selected_group_seminaria=group_seminaria,
-            selected_group_cwiczenia=group_cwiczenia,
-            selected_group_zajecia=group_zajecia
-        ), 400
+#     if not (1 <= int(group_seminaria) <= LAST_GROUP):
+#         return render_template(
+#             "index.html", 
+#             errors = "Niepoprawna grupa seminaryjna!", 
+#             groups=groups,
+#             selected_date=date_str,
+#             selected_group_seminaria=group_seminaria,
+#             selected_group_cwiczenia=group_cwiczenia,
+#             selected_group_zajecia=group_zajecia
+#         ), 400
     
-    if not validate_group(group_cwiczenia, ['a', 'b']):
-        return render_template(
-            "index.html", 
-            errors = "Niepoprawna grupa ćwiczeniowa!", 
-            groups=groups,
-            selected_date=date_str,
-            selected_group_seminaria=group_seminaria,
-            selected_group_cwiczenia=group_cwiczenia,
-            selected_group_zajecia=group_zajecia
-        ), 400
+#     if not validate_group(group_cwiczenia, ['a', 'b']):
+#         return render_template(
+#             "index.html", 
+#             errors = "Niepoprawna grupa ćwiczeniowa!", 
+#             groups=groups,
+#             selected_date=date_str,
+#             selected_group_seminaria=group_seminaria,
+#             selected_group_cwiczenia=group_cwiczenia,
+#             selected_group_zajecia=group_zajecia
+#         ), 400
 
-    if not validate_group(group_zajecia, ['a', 'b', 'c']):
-        return render_template(
-            "index.html", 
-            errors = "Niepoprawna grupa zajęciowa!", 
-            groups=groups,
-            selected_date=date_str,
-            selected_group_seminaria=group_seminaria,
-            selected_group_cwiczenia=group_cwiczenia,
-            selected_group_zajecia=group_zajecia
-        ), 400
+#     if not validate_group(group_zajecia, ['a', 'b', 'c']):
+#         return render_template(
+#             "index.html", 
+#             errors = "Niepoprawna grupa zajęciowa!", 
+#             groups=groups,
+#             selected_date=date_str,
+#             selected_group_seminaria=group_seminaria,
+#             selected_group_cwiczenia=group_cwiczenia,
+#             selected_group_zajecia=group_zajecia
+#         ), 400
 
-    schedule_data = get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwiczenia, group_zajecia)
+#     schedule_data = get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwiczenia, group_zajecia)
 
-    # return jsonify(schedule_data)
-    return render_template("schedule.html", schedule_data=schedule_data)
+#     # return jsonify(schedule_data)
+#     return render_template("schedule.html", schedule_data=schedule_data)
 
 @app.route("/api/schedule", methods=["GET"])
 def get_schedule_api():
     date_str = request.args.get("selected_date")
     group_seminaria = request.args.get("group_seminaria", type=int)
     group_cwiczenia = request.args.get("group_cwiczenia")
-    group_zajecia = request.args.get("group_zajecia")
+    group_zajecia = request.args.get("group_zajecia")    
 
-    if not date_str or group_seminaria is None or not group_cwiczenia or not group_zajecia:
+    # if not date_str or group_seminaria is None or not group_cwiczenia or not group_zajecia:
+    #     return jsonify({
+    #         "error": "Wybierz wszystkie parametry zapytania!"
+    #     }), 400 
+
+    if group_seminaria is None:
         return jsonify({
-            "error": "Wybierz wszystkie parametry zapytania!"
-        }), 400
+            "error": "Wybierz grupę seminaryjną!"
+        }), 400 
+    
+    if not group_cwiczenia or not group_zajecia:
+        return jsonify({
+            "error": "Wybierz grupy ćwiczeniową i zajęciową!"
+        }), 400 
 
+
+    if not date_str:
+        return jsonify({
+            "error": "Wybierz datę!"
+        }), 400 
+    
     try:
         selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
     except ValueError:
