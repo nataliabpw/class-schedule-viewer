@@ -73,7 +73,7 @@
 
         if (data.schedule.length === 0) {
             const noClasses = document.createElement('p');
-            noClasses.classList.add('text-muted');
+            noClasses.classList.add('text-muted', 'text-center');
             noClasses.textContent = 'Brak zajęć w tym dniu.';
             cardBody.appendChild(noClasses);
             return;

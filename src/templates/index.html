@@ -6,42 +6,52 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
 <body class="bg-light">
-    <div class="container d-flex justify-content-center align-items-center min-vh-100">
-        <div class="col-12 col-md-8 col-lg-6">
-            <div id="error-container" class="alert alert-danger" style="display:none;" role="alert"></div>
-            <div id="schedule-container" class="mt-5 mb-4"></div>
-            <div class="card shadow-sm p-4 ">
-                <h2 class="text-center mb-3">Odczytaj plan zajęć</h2>
-                <div class="mb-3">
-                    <form id="schedule-form">
-                        <div class="mb-3">
-                            <label class="form-label">Data:</label>
-                            <input type="date" name="selected_date" value="" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Grupa seminaryjna:</label>
-                            <select name="group_seminaria" id="group-seminaria" class="form-select">
-                                <option value="">--</option>
-                                {% for group in groups %}
-                                    <option value="{{group}}">{{group}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Grupa ćwiczeniowa:</label>
-                            <select name="group_cwiczenia" id="group-cwiczenia" class="form-select">
-                                <option value="">-- wybierz najpierw grupę seminaryjną--</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Grupa zajęć praktycznych:</label>
-                            <select name="group_zajecia" id="group-zajecia" class="form-select">
-                                <option value="">-- wybierz najpierw grupę seminaryjną--</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Zobacz plan</button>
-                    </form>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="card shadow-sm p-4 ">
+                    <h2 class="text-center mb-3">Odczytaj plan zajęć</h2>
+                    <div id="error-container"
+                        class="alert alert-danger"
+                        style="display:none;"
+                        role="alert">
+                    </div>
+                    <div class="mb-3">
+                        <form id="schedule-form">
+                            <div class="mb-3">
+                                <label class="form-label">Data:</label>
+                                <input type="date" name="selected_date" value="" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Grupa seminaryjna:</label>
+                                <select name="group_seminaria" id="group-seminaria" class="form-select">
+                                    <option value="">--</option>
+                                    {% for group in groups %}
+                                        <option value="{{group}}">{{group}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Grupa ćwiczeniowa:</label>
+                                <select name="group_cwiczenia" id="group-cwiczenia" class="form-select">
+                                    <option value="">-- wybierz najpierw grupę seminaryjną--</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Grupa zajęć praktycznych:</label>
+                                <select name="group_zajecia" id="group-zajecia" class="form-select">
+                                    <option value="">-- wybierz najpierw grupę seminaryjną--</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Zobacz plan</button>
+                        </form>
+                    </div>
                 </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12">
+                <div id="schedule-container" class="mt-5 mb-4"></div>
             </div>
         </div>
     </div>
