@@ -9,11 +9,10 @@ groups = range(1, LAST_GROUP + 1)
 
 @app.route("/", methods=["GET"])
 def home():
-    return "App works"
-    # return render_template(
-    #     "index.html", 
-    #     groups=groups, 
-    # )
+    return render_template(
+        "index.html", 
+        groups=groups, 
+    )
 
 @app.route("/api/schedule", methods=["GET"])
 def get_schedule_api():
