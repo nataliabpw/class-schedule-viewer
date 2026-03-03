@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify, render_template
 from datetime import datetime
 from src.schedule.service import get_schedule_for_date_and_groups
+import logging
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
@@ -9,10 +11,11 @@ groups = range(1, LAST_GROUP + 1)
 
 @app.route("/", methods=["GET"])
 def home():
-    return render_template(
-        "index.html", 
-        groups=groups, 
-    )
+    try:
+        return render_template("index.html", groups=groups)
+    except Exception as e:
+        logger.exception("Error rendering template index.html")
+        return f"Template render error: {e}", 500
 
 @app.route("/api/schedule", methods=["GET"])
 def get_schedule_api():
