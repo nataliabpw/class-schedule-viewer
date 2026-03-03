@@ -11,11 +11,7 @@ groups = range(1, LAST_GROUP + 1)
 
 @app.route("/", methods=["GET"])
 def home():
-    try:
-        return render_template("index.html", groups=groups)
-    except Exception as e:
-        logger.exception("Error rendering template index.html")
-        return f"Template render error: {e}", 500
+    return render_template("index.html", groups=groups)
 
 @app.route("/api/schedule", methods=["GET"])
 def get_schedule_api():
