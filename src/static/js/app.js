@@ -112,7 +112,7 @@
 
         // Classroom schedule
         const classroomScheduleTable = document.createElement('table');
-        classroomScheduleTable.classList.add('table', 'table-hover', 'align-middle', 'mt-3', 'text-center');
+        classroomScheduleTable.classList.add('table', 'table-hover', 'align-middle', 'mt-5', 'text-center');
         
         const classroomThead = document.createElement('thead');
         classroomThead.classList.add('table-light');
@@ -121,6 +121,7 @@
         const classroomTh = document.createElement('th');
         classroomTh.classList.add('align-middle', 'text-center', 'fw-semibold');
         classroomTh.textContent = data.classroom_schedule[0];
+        classroomTh.style.whiteSpace = 'pre-line';
         classroomHeaderRow.appendChild(classroomTh);
 
         classroomThead.appendChild(classroomHeaderRow);
@@ -131,7 +132,7 @@
         data.classroom_schedule.slice(1).forEach(entry => {
             const row = document.createElement('tr');
             const td = document.createElement('td');
-            td.textContent = entry;
+            td.innerText = entry;
             row.appendChild(td);
 
             classroomTbody.appendChild(row);

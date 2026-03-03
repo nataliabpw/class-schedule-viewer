@@ -55,4 +55,5 @@ def build_classroom_schedule(data_dir):
     df = pd.read_excel(converted_data_path, header=None, skiprows=58, usecols=[0])
     df = df.dropna()                            
     class_schedule = df.iloc[:-1,0].tolist()
+    class_schedule[0] = class_schedule[0].replace("Zajęcia", "\nZajęcia")
     return class_schedule
