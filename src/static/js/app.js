@@ -109,6 +109,36 @@
         })
         table.appendChild(tbody);
         cardBody.appendChild(table);
+
+        // Classroom schedule
+        const classroomScheduleTable = document.createElement('table');
+        classroomScheduleTable.classList.add('table', 'table-hover', 'align-middle', 'mt-3', 'text-center');
+        
+        const classroomThead = document.createElement('thead');
+        classroomThead.classList.add('table-light');
+
+        const classroomHeaderRow = document.createElement('tr');
+        const classroomTh = document.createElement('th');
+        classroomTh.classList.add('align-middle', 'text-center', 'fw-semibold');
+        classroomTh.textContent = data.classroom_schedule[0];
+        classroomHeaderRow.appendChild(classroomTh);
+
+        classroomThead.appendChild(classroomHeaderRow);
+        classroomScheduleTable.appendChild(classroomThead);
+
+        const classroomTbody = document.createElement('tbody');
+
+        data.classroom_schedule.slice(1).forEach(entry => {
+            const row = document.createElement('tr');
+            const td = document.createElement('td');
+            td.textContent = entry;
+            row.appendChild(td);
+
+            classroomTbody.appendChild(row);
+        })
+        classroomScheduleTable.appendChild(classroomTbody);
+        cardBody.appendChild(classroomScheduleTable);
+
     }
 
     form.addEventListener('submit', (event) => {

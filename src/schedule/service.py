@@ -48,12 +48,12 @@ def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwicz
 
     schedule = format_schedule_with_time(classes, df, start_row, time_column_id)
 
-    class_schedule = build_classroom_schedule(data_dir)
+    classroom_schedule = build_classroom_schedule(data_dir)
 
     return {
     "schedule_name": schedule_name,
     "selected_date": selected_date.strftime("%Y-%m-%d"),
     "weekday": WEEKDAYS[weekday_id],
     "schedule": schedule,
-    "class_schedule": class_schedule
+    "classroom_schedule": classroom_schedule
     }
