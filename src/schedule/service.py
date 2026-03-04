@@ -58,7 +58,7 @@ def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwicz
 
     schedule = format_schedule_with_time(classes, df, start_row, time_column_id)
 
-    classroom_schedule = build_classroom_schedule(data_path)
+    classroom_schedule = build_classroom_schedule(data_path, end_row)
 
     return {
     "schedule_name": schedule_name,

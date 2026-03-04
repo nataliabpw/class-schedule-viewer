@@ -17,9 +17,12 @@ def build_group_schedule(class_name_row, class_info_row, start_row, end_row, mat
                 if group_index+len(group) < len(cell):
                     if cell[group_index+len(group)] in '0123456789':
                         continue
+                name = df.iloc[class_name_row, column_id].strip()+" - "+cell
+                location = df.iloc[class_info_row, column_id]
+                location = '' if pd.isna(location) else str(location).strip()
                 classes[row_id-start_row] = {
-                    "name":df.iloc[class_name_row, column_id].strip()+" - "+cell, 
-                    "location": df.iloc[class_info_row, column_id].strip()
+                    "name": name, 
+                    "location": location
                 }
     return classes
 

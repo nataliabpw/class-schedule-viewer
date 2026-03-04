@@ -27,6 +27,8 @@ def find_columns_with_matching_date(df, selected_date, weekday_start_column_id, 
         cell = str(cell).strip()
 
         DASH = '-'
+        COMMA = ','
+        I_LETTER = 'i'
         if DASH in cell:
             dash_index = cell.index(DASH)
             start_date = cell[0:dash_index].strip()
@@ -43,6 +45,19 @@ def find_columns_with_matching_date(df, selected_date, weekday_start_column_id, 
                 if is_date_an_exception(cell, selected_date):
                     continue
                 matching_date_columns.append(current_column_id)
+        elif COMMA in cell or I_LETTER in cell:
+            for date_string in cell.split(COMMA):
+                date_string = date_string.strip()
+                if I_LETTER in date_string:
+                    for sub_date_string in date_string.split(I_LETTER):
+                        sub_date_string = sub_date_string.strip()
+                        date_from_cell = parse_date(sub_date_string, selected_date)
+                        if date_from_cell == selected_date:
+                            matching_date_columns.append(current_column_id)
+                else:
+                    date_from_cell = parse_date(date_string, selected_date)
+                    if date_from_cell == selected_date:
+                        matching_date_columns.append(current_column_id)
         elif cell=='cały semestr':
             matching_date_columns.append(current_column_id )
         elif cell != 'nan':
