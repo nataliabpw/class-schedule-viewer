@@ -1,10 +1,10 @@
 from openpyxl import load_workbook
 import pandas as pd
 
-def load_spreadsheet_with_merged_cells(data_path):
+def load_spreadsheet_with_merged_cells(data_path, end_row):
     # Future improvement:
     # - try converting .xls to .xlsx using LibreOffice or other tool
-    df = pd.read_excel(data_path, header=None, nrows=57)
+    df = pd.read_excel(data_path, header=None, nrows=end_row)
     df = df.astype(object)
 
     wb = load_workbook(data_path)

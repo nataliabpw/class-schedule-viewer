@@ -9,15 +9,25 @@ def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwicz
     project_root = Path(__file__).parent.parent.parent
     data_dir = project_root / 'data'
     
+    weekday_row = 2
+    class_name_row = weekday_row + 1
+    start_row = weekday_row + 4
+
     summer_semester_start = date(2026, 2, 16)
     if selected_date >= summer_semester_start:
         file_name ='summer_semester_schedule.xlsx'
+        date_row = weekday_row + 3
+        class_info_row = weekday_row + 2
+        end_row = 60
     else:
         file_name ='winter_semester_schedule.xlsx'
+        date_row = weekday_row + 2
+        class_info_row = weekday_row + 3
+        end_row = 57
 
     data_path = data_dir / file_name
-    df = load_spreadsheet_with_merged_cells(data_path)
-
+    df = load_spreadsheet_with_merged_cells(data_path, end_row)
+    
     schedule_name = df.iloc[0,0]
 
     group_seminaria = 'grupa ' + str(group_seminaria)
@@ -34,19 +44,11 @@ def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwicz
             "schedule": []
         }
 
-    # Future-improvement:  Detect the weekday_row containing weekdays dynamically
-    weekday_row = 2
-
     weekday_start_column_id, weekday_end_column_id = find_columns_for_specific_weekday(df, weekday_id, weekday_row)
     
-    date_row = weekday_row + 2
     matching_date_columns = find_columns_with_matching_date(df, selected_date, weekday_start_column_id, weekday_end_column_id, date_row)
 
-    class_name_row = weekday_row + 1
-    start_row = weekday_row + 4
-    end_row = df.shape[0]
-
-    classes = build_group_schedule(class_name_row, start_row, end_row, matching_date_columns, df, group_seminaria, group_cwiczenia, group_zajecia)
+    classes = build_group_schedule(class_name_row, class_info_row, start_row, end_row, matching_date_columns, df, group_seminaria, group_cwiczenia, group_zajecia)
     
     # Future-improvement: detect time_column_id dynamically
     if weekday_id==0:

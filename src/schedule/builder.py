@@ -1,9 +1,7 @@
 import pandas as pd
 
-def build_group_schedule(class_name_row, start_row, end_row, matching_date_columns, df, group_seminaria, group_cwiczenia, group_zajecia):
+def build_group_schedule(class_name_row, class_info_row, start_row, end_row, matching_date_columns, df, group_seminaria, group_cwiczenia, group_zajecia):
     classes = [None] * (end_row - start_row)
-
-    class_info_row = class_name_row + 2
 
     for column_id in matching_date_columns:
         if 'ćwiczenia' in df.iloc[class_name_row, column_id].lower():
@@ -50,8 +48,8 @@ def format_schedule_with_time(classes, df, start_row, time_column_id):
         last_class_info = curr_class_entry["location"] if curr_class_entry is not None else None
     return schedule
 
-def build_classroom_schedule(data_path):
-    df = pd.read_excel(data_path, header=None, skiprows=58, usecols=[0])
+def build_classroom_schedule(data_path, end_row):
+    df = pd.read_excel(data_path, header=None, skiprows=end_row+1, usecols=[0])
     df = df.dropna()                            
     class_schedule = df.iloc[:-1,0].tolist()
     class_schedule[0] = class_schedule[0].replace("Zajęcia", "\nZajęcia")
