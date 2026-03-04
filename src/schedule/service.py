@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import date
 from .reader import load_spreadsheet_with_merged_cells
 from .matcher import find_columns_for_specific_weekday, find_columns_with_matching_date, is_next_weekday_reached, is_weekday_start_column_id_set
 from .builder import build_group_schedule, format_schedule_with_time, build_classroom_schedule
@@ -7,8 +8,14 @@ from .constants import WEEKDAYS
 def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwiczenia, group_zajecia):
     project_root = Path(__file__).parent.parent.parent
     data_dir = project_root / 'data'
-    data_path = data_dir / 'winter_semester_schedule.xlsx'
+    
+    summer_semester_start = date(2026, 2, 16)
+    if selected_date >= summer_semester_start:
+        file_name ='summer_semester_schedule.xlsx'
+    else:
+        file_name ='winter_semester_schedule.xlsx'
 
+    data_path = data_dir / file_name
     df = load_spreadsheet_with_merged_cells(data_path)
 
     schedule_name = df.iloc[0,0]
