@@ -7,8 +7,9 @@ from .constants import WEEKDAYS
 def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwiczenia, group_zajecia):
     project_root = Path(__file__).parent.parent.parent
     data_dir = project_root / 'data'
+    data_path = data_dir / 'winter_semester_schedule.xlsx'
 
-    df = load_spreadsheet_with_merged_cells(data_dir)
+    df = load_spreadsheet_with_merged_cells(data_path)
 
     schedule_name = df.iloc[0,0]
 
@@ -48,7 +49,7 @@ def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwicz
 
     schedule = format_schedule_with_time(classes, df, start_row, time_column_id)
 
-    classroom_schedule = build_classroom_schedule(data_dir)
+    classroom_schedule = build_classroom_schedule(data_path)
 
     return {
     "schedule_name": schedule_name,

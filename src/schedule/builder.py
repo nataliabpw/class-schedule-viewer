@@ -50,9 +50,8 @@ def format_schedule_with_time(classes, df, start_row, time_column_id):
         last_class_info = curr_class_entry["location"] if curr_class_entry is not None else None
     return schedule
 
-def build_classroom_schedule(data_dir):
-    converted_data_path = data_dir / 'converted_example_schedule.xlsx'
-    df = pd.read_excel(converted_data_path, header=None, skiprows=58, usecols=[0])
+def build_classroom_schedule(data_path):
+    df = pd.read_excel(data_path, header=None, skiprows=58, usecols=[0])
     df = df.dropna()                            
     class_schedule = df.iloc[:-1,0].tolist()
     class_schedule[0] = class_schedule[0].replace("Zajęcia", "\nZajęcia")
