@@ -98,6 +98,20 @@ def test_matching_date_range():
 
     assert result == [0, 2]
 
+def test_matching_date_multiple_dates_in_cell():
+    row = ["7.11., 5.12 i 12.12", "09.01, 19.12", "7.11, 12.12 i 20.12"]
+    df = pd.DataFrame([row])
+
+    result = find_columns_with_matching_date(
+        df=df,
+        selected_date=date(2025, 12, 12),
+        weekday_start_column_id=0,
+        weekday_end_column_id=len(row)-1,
+        date_row=0
+    )
+
+    assert result == [0, 2]
+
 def test_matching_date_whole_semester():
     row = ["09.01", "cały semestr"]
     df = pd.DataFrame([row])

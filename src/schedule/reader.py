@@ -1,14 +1,13 @@
 from openpyxl import load_workbook
 import pandas as pd
 
-def load_spreadsheet_with_merged_cells(data_dir):
+def load_spreadsheet_with_merged_cells(data_path, end_row):
     # Future improvement:
     # - try converting .xls to .xlsx using LibreOffice or other tool
-    converted_data_path = data_dir / 'converted_example_schedule.xlsx'
-    df = pd.read_excel(converted_data_path, header=None, nrows=57)
+    df = pd.read_excel(data_path, header=None, nrows=end_row)
     df = df.astype(object)
 
-    wb = load_workbook(converted_data_path)
+    wb = load_workbook(data_path)
     ws = wb.active # first sheet from file
 
     for merged_range in ws.merged_cells.ranges:

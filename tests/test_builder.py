@@ -4,6 +4,7 @@ import pandas as pd
 def test_build_group_schedule_cwiczenia():
     df = pd.DataFrame([
         ["Anatomia ćwiczenia", "Biochemia - ćwiczenia"],
+        ["sala 1", "2 spotkania po 2 godziny"],
         ["grupa 2a 2b", "grupa 12b"],
         ["grupa 2a", "grupa 2b"],
         ["", ""],
@@ -13,7 +14,8 @@ def test_build_group_schedule_cwiczenia():
 
     classes = build_group_schedule(
         class_name_row=0,
-        start_row=1,
+        class_info_row=1,
+        start_row=2,
         end_row=df.shape[0],
         matching_date_columns=[0, 1],
         df=df,
@@ -23,16 +25,17 @@ def test_build_group_schedule_cwiczenia():
     )
 
     assert classes == [
-        "Anatomia ćwiczenia - grupa 2a 2b",
-        "Biochemia - ćwiczenia - grupa 2b",
+        {"name": "Anatomia ćwiczenia - grupa 2a 2b", "location": "sala 1"},
+        {"name": "Biochemia - ćwiczenia - grupa 2b", "location": "2 spotkania po 2 godziny"},
         None,
-        "Anatomia ćwiczenia - grupa 2b",
+        {"name": "Anatomia ćwiczenia - grupa 2b", "location": "sala 1"},
         None
     ]
 
 def test_build_group_schedule_for_group_1():
     df = pd.DataFrame([
         ["Prawo medyczne", "Biochemia seminarium"],
+        ["s. 101", "2 spotkania po 2 godziny"],
         ["grupa 1", "grupa 13"],
         ["grupa 11", "grupa 1 s. 101"],
         ["", "grupa 11"],
@@ -42,7 +45,8 @@ def test_build_group_schedule_for_group_1():
 
     classes = build_group_schedule(
         class_name_row=0,
-        start_row=1,
+        class_info_row=1,
+        start_row=2,
         end_row=df.shape[0],
         matching_date_columns=[0, 1],
         df=df,
@@ -52,22 +56,22 @@ def test_build_group_schedule_for_group_1():
     )
 
     assert classes == [
-        "Prawo medyczne - grupa 1",
-        "Biochemia seminarium - grupa 1 s. 101",
+        {"name": "Prawo medyczne - grupa 1", "location": "s. 101"},
+        {"name": "Biochemia seminarium - grupa 1 s. 101", "location": "2 spotkania po 2 godziny"},
         None,
-        "Prawo medyczne - grupa 1",
+        {"name": "Prawo medyczne - grupa 1", "location": "s. 101"},
         None
     ]
 
 def test_format_schedule_with_time():
     classes = [
-        "Prawo medyczne - grupa 1",
-        "Prawo medyczne - grupa 1",
-        "Prawo medyczne - grupa 1",
-        "Anatomia ćwiczenia - grupa 1a",
+        {"name": "Prawo medyczne - grupa 1", "location": "s. 101"},
+        {"name": "Prawo medyczne - grupa 1", "location": "s. 101"},
+        {"name": "Prawo medyczne - grupa 1", "location": "s. 101"},
+        {"name": "Anatomia ćwiczenia - grupa 1a", "location": "2 godziny"},
         None,
-        "Biochemia - grupa 1",
-        "Biochemia - grupa 1",
+        {"name": "Biochemia - grupa 1", "location": ""},
+        {"name": "Biochemia - grupa 1", "location": ""},
         None
     ]
 
@@ -90,9 +94,9 @@ def test_format_schedule_with_time():
     )
 
     expected_schedule = [
-        {"name": "Prawo medyczne - grupa 1", "start": "08.00", "end": "11.00"},
-        {"name": "Anatomia ćwiczenia - grupa 1a", "start": "11.00", "end": "12.00"},
-        {"name": "Biochemia - grupa 1", "start": "13.00", "end": "15.00"},
+        {"name": "Prawo medyczne - grupa 1", "info": "s. 101", "start": "08.00", "end": "11.00"},
+        {"name": "Anatomia ćwiczenia - grupa 1a", "info": "2 godziny", "start": "11.00", "end": "12.00"},
+        {"name": "Biochemia - grupa 1", "info": "", "start": "13.00", "end": "15.00"},
     ]
 
     assert schedule == expected_schedule
