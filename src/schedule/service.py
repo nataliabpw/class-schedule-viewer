@@ -30,10 +30,6 @@ def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwicz
     
     schedule_name = df.iloc[0,0]
 
-    group_seminaria = 'grupa ' + str(group_seminaria)
-    group_cwiczenia = ' ' + group_cwiczenia
-    group_zajecia = ' ' + group_zajecia
-
     weekday_id = selected_date.weekday()  # Monday is 0 and Sunday is 6
     
     if weekday_id > 4:

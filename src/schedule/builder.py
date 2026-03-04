@@ -3,27 +3,40 @@ import pandas as pd
 def build_group_schedule(class_name_row, class_info_row, start_row, end_row, matching_date_columns, df, group_seminaria, group_cwiczenia, group_zajecia):
     classes = [None] * (end_row - start_row)
 
+    group_seminaria = str(group_seminaria).strip()
+    group_cwiczenia = str(group_cwiczenia).strip()
+    group_zajecia = str(group_zajecia).strip()
+
     for column_id in matching_date_columns:
         if 'ćwiczenia' in df.iloc[class_name_row, column_id].lower():
-            group = group_cwiczenia
+            group = ' ' + group_cwiczenia
+            group_short = group_cwiczenia
         elif 'zajęcia praktyczne' in df.iloc[class_name_row, column_id].lower():
-            group = group_zajecia
+            group = ' ' + group_zajecia
+            group_short = group_zajecia
         else:
-            group = group_seminaria
+            group = 'grupa ' + group_seminaria
+            group_short = group_seminaria
+        
         for row_id in range(start_row, end_row):
             cell = str(df.iloc[row_id, column_id]).strip()
-            if group in cell:
+
+            if cell != group_short:
+                if group not in cell:
+                    continue
+
                 group_index = cell.index(group)
                 if group_index+len(group) < len(cell):
                     if cell[group_index+len(group)] in '0123456789':
                         continue
-                name = df.iloc[class_name_row, column_id].strip()+" - "+cell
-                location = df.iloc[class_info_row, column_id]
-                location = '' if pd.isna(location) else str(location).strip()
-                classes[row_id-start_row] = {
-                    "name": name, 
-                    "location": location
-                }
+
+            name = df.iloc[class_name_row, column_id].strip()+" - "+cell
+            location = df.iloc[class_info_row, column_id]
+            location = '' if pd.isna(location) else str(location).strip()
+            classes[row_id-start_row] = {
+                "name": name, 
+                "location": location
+            }
     return classes
 
 def format_schedule_with_time(classes, df, start_row, time_column_id):
