@@ -28,8 +28,7 @@ def build_group_schedule(class_name_row, class_info_row, start_row, end_row, mat
 
             if cell == group_short:
                 match = True
-
-            if group in cell:
+            elif group in cell:
                 if not group_short[-1].isalpha():
                     # Seminarium
                     group_index = cell.index(group)
@@ -37,13 +36,18 @@ def build_group_schedule(class_name_row, class_info_row, start_row, end_row, mat
                         if cell[group_index+len(group)] in '0123456789':
                             continue
                 match = True
-        
-            if group_short[-1].isalpha():
+            elif group_short[-1].isalpha():
                 # Ćwiczenia or Zajęcia praktyczne
-                group_with_spaces = " " + group_short[:-1] + " " + group_short[-1]
+                
+                pattern = group_seminaria + "abc"
+                cell_without_commas_and_spaces = cell.replace(",", "").replace(" ", "")
 
-                if group_with_spaces in cell:
+                if pattern in cell_without_commas_and_spaces:
                     match = True
+                else:
+                    group_with_spaces = " " + group_short[:-1] + " " + group_short[-1]
+                    if group_with_spaces in cell:
+                        match = True
 
             if match:
                 name = df.iloc[class_name_row, column_id].strip()+" - "+cell
