@@ -6,6 +6,16 @@ from .builder import build_group_schedule, format_schedule_with_time, build_clas
 from .constants import WEEKDAYS
 
 def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwiczenia, group_zajecia):
+    weekday_id = selected_date.weekday()  # Monday is 0 and Sunday is 6
+    
+    if weekday_id > 4:
+        return {
+            "schedule_name": "",
+            "selected_date": selected_date.strftime("%Y-%m-%d"),
+            "weekday": WEEKDAYS[weekday_id],
+            "schedule": []
+        }
+    
     project_root = Path(__file__).parent.parent.parent
     data_dir = project_root / 'data'
     
@@ -29,16 +39,6 @@ def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwicz
     df = load_spreadsheet_with_merged_cells(data_path, end_row)
     
     schedule_name = df.iloc[0,0]
-
-    weekday_id = selected_date.weekday()  # Monday is 0 and Sunday is 6
-    
-    if weekday_id > 4:
-        return {
-            "schedule_name": schedule_name,
-            "selected_date": selected_date.strftime("%Y-%m-%d"),
-            "weekday": WEEKDAYS[weekday_id],
-            "schedule": []
-        }
 
     weekday_start_column_id, weekday_end_column_id = find_columns_for_specific_weekday(df, weekday_id, weekday_row)
     
