@@ -1,6 +1,8 @@
 from datetime import datetime
 from .constants import WEEKDAYS
+from .utils.profiler import timer
 
+@timer
 def find_columns_for_specific_weekday(df, weekday_id, weekday_row):
     weekday_start_column_id = -1
     weekday_end_column_id = df.iloc[weekday_row].size-1
@@ -15,6 +17,7 @@ def find_columns_for_specific_weekday(df, weekday_id, weekday_row):
             return weekday_start_column_id, weekday_end_column_id
     return weekday_start_column_id, weekday_end_column_id
 
+@timer
 def find_columns_with_matching_date(df, selected_date, weekday_start_column_id, weekday_end_column_id, date_row):
     matching_date_columns = []
     for column_id, cell in enumerate(df.iloc[date_row, weekday_start_column_id:weekday_end_column_id+1]):
