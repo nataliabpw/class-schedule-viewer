@@ -1,3 +1,4 @@
+import pandas as pd
 from pathlib import Path
 from datetime import date
 from .reader import load_spreadsheet_with_merged_cells
@@ -25,18 +26,21 @@ def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwicz
 
     summer_semester_start = date(2026, 2, 16)
     if selected_date >= summer_semester_start:
-        file_name ='summer_semester_schedule.xlsx'
+        file_name ='summer_semester_schedule.csv'
+        classroom_file_name = 'summer_semester_classrooms.csv'
         date_row = weekday_row + 3
         class_info_row = weekday_row + 2
         end_row = 60
     else:
-        file_name ='winter_semester_schedule.xlsx'
+        file_name ='winter_semester_schedule.csv'
+        classroom_file_name = 'winter_semester_classrooms.csv'
         date_row = weekday_row + 2
         class_info_row = weekday_row + 3
         end_row = 57
 
     data_path = data_dir / file_name
-    df = load_spreadsheet_with_merged_cells(data_path, end_row)
+    classroom_data_path = data_dir / classroom_file_name
+    df = pd.read_csv(data_path, header=None)
     
     schedule_name = df.iloc[0,0]
 
@@ -54,7 +58,7 @@ def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwicz
 
     schedule = format_schedule_with_time(classes, df, start_row, time_column_id)
 
-    classroom_schedule = build_classroom_schedule(data_path, end_row)
+    classroom_schedule = pd.read_csv(classroom_data_path, header=None)[0].tolist()
 
     return {
     "schedule_name": schedule_name,

@@ -87,6 +87,6 @@ def format_schedule_with_time(classes, df, start_row, time_column_id):
 def build_classroom_schedule(data_path, end_row):
     df = pd.read_excel(data_path, header=None, skiprows=end_row+1, usecols=[0])
     df = df.dropna()                            
-    class_schedule = df.iloc[:-1,0].tolist()
-    class_schedule[0] = class_schedule[0].replace("Zajęcia", "\nZajęcia")
-    return class_schedule
+    classroom_schedule = df.iloc[:-1,0]
+    classroom_schedule[0] = classroom_schedule[0].replace("Zajęcia", "\nZajęcia")
+    return classroom_schedule

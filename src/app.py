@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify, render_template
 from datetime import datetime
 from src.schedule.service import get_schedule_for_date_and_groups
 import logging
+
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
