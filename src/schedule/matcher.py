@@ -24,7 +24,12 @@ def find_columns_with_matching_date(df, selected_date, weekday_start_column_id, 
             if cell.date() == selected_date:
                 matching_date_columns.append(current_column_id)
             continue
+
         cell = str(cell).strip()
+
+        if '\n' in cell:
+            n_id = cell.index('\n')
+            cell = cell[:n_id].strip()
 
         DASH = '-'
         COMMA = ','
