@@ -10,21 +10,21 @@
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-12 col-md-8 col-lg-6">
-                <div class="card shadow-sm p-4 ">
-                    <h2 class="text-center mb-3">Odczytaj plan zajęć</h2>
+                <div class="card shadow p-4 border-0" style="border-radius:12px;">
+                    <h2 class="text-center mb-3 fw-semibold">Odczytaj plan zajęć</h2>
                     <div id="error-container"
                         class="alert alert-danger"
-                        style="display:none;"
+                        style="display:none; text-align: center;"
                         role="alert">
                     </div>
                     <div class="mb-3">
                         <form id="schedule-form">
                             <div class="mb-3">
-                                <label class="form-label">Data:</label>
+                                <label class="form-label fw-semibold">Data:</label>
                                 <input type="date" name="selected_date" value="" class="form-control">
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Grupa seminaryjna:</label>
+                                <label class="form-label fw-semibold">Grupa seminaryjna:</label>
                                 <select name="group_seminaria" id="group-seminaria" class="form-select">
                                     <option value="">--</option>
                                     {% for group in groups %}
@@ -33,18 +33,18 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Grupa ćwiczeniowa:</label>
+                                <label class="form-label fw-semibold">Grupa ćwiczeniowa:</label>
                                 <select name="group_cwiczenia" id="group-cwiczenia" class="form-select">
                                     <option value="">-- wybierz najpierw grupę seminaryjną--</option>
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Grupa zajęć praktycznych:</label>
+                                <label class="form-label fw-semibold">Grupa zajęć praktycznych:</label>
                                 <select name="group_zajecia" id="group-zajecia" class="form-select">
                                     <option value="">-- wybierz najpierw grupę seminaryjną--</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100">Zobacz plan</button>
+                            <button type="submit" class="btn w-100 fw-semibold mt-3" style="background-color:#5b3cc4; border-color:#5b3cc4; color:white;">Zobacz plan</button>
                         </form>
                     </div>
                 </div>

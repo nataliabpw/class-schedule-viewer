@@ -49,7 +49,8 @@
         scheduleDiv.innerHTML = '';
 
         const card = document.createElement('div');
-        card.classList.add('card', 'shadow-sm', 'mb-4');
+        card.classList.add('card', 'shadow', 'mb-4', 'border-0');
+        card.style.borderRadius = "12px";
         scheduleDiv.appendChild(card);
 
         const cardBody = document.createElement('div');
@@ -63,7 +64,7 @@
         header.innerHTML = `
             <div class="text-center">
                 <h5 class="mb-1 fw-semibold">${data.schedule_name}</h5>
-                <div class="text-muted small">
+                <div class="text-muted mt-3">
                     ${data.selected_date} • ${data.weekday}
                 </div>
             </div>
@@ -81,7 +82,7 @@
 
         // Table
         const table = document.createElement('table');
-        table.classList.add('table', 'table-hover', 'align-middle', 'mt-3', 'text-center');
+        table.classList.add('table', 'table-hover', 'align-middle', 'mt-4', 'text-center');
         
         const thead = document.createElement('thead');
         thead.classList.add('table-light');
