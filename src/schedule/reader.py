@@ -1,8 +1,6 @@
 from openpyxl import load_workbook
 import pandas as pd
-from .utils.profiler import timer
 
-@timer
 def load_spreadsheet_with_merged_cells(data_path, end_row):
     # Future improvement:
     # - try converting .xls to .xlsx using LibreOffice or other tool
