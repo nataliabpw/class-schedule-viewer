@@ -1,6 +1,6 @@
 from pathlib import Path
-from src.schedule.reader import load_spreadsheet_with_merged_cells
-from src.schedule.builder import build_classroom_schedule
+from readers.schedule_reader import load_spreadsheet_with_merged_cells
+from readers.classrooms_reader import build_classroom_schedule
 
 project_root = Path(__file__).parent.parent
 data_dir = project_root / 'data'
@@ -30,4 +30,3 @@ for file in files:
 
     classroom_schedule = build_classroom_schedule(data_path, file["end_row"])
     classroom_schedule.to_csv(classrooms_path, index=False, header=False)
-

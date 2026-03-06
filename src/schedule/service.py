@@ -1,9 +1,8 @@
 import pandas as pd
 from pathlib import Path
 from datetime import date
-from .reader import load_spreadsheet_with_merged_cells
-from .matcher import find_columns_for_specific_weekday, find_columns_with_matching_date, is_next_weekday_reached, is_weekday_start_column_id_set
-from .builder import build_group_schedule, format_schedule_with_time, build_classroom_schedule
+from .matcher import find_columns_for_specific_weekday, find_columns_with_matching_date
+from .builder import build_group_schedule, format_schedule_with_time
 from .constants import WEEKDAYS
 
 def get_schedule_for_date_and_groups(selected_date, group_seminaria, group_cwiczenia, group_zajecia):
