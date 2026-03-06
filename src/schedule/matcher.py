@@ -19,13 +19,16 @@ def find_columns_with_matching_date(df, selected_date, weekday_start_column_id, 
     matching_date_columns = []
     for column_id, cell in enumerate(df.iloc[date_row, weekday_start_column_id:weekday_end_column_id+1]):
         current_column_id = column_id+weekday_start_column_id
+        
+        cell = str(cell).strip()
 
-        if isinstance(cell, datetime):
-            if cell.date() == selected_date:
+        try:
+            parsed = datetime.fromisoformat(cell)
+            if parsed.date() == selected_date:
                 matching_date_columns.append(current_column_id)
             continue
-
-        cell = str(cell).strip()
+        except ValueError:
+            pass
 
         if '\n' in cell:
             n_id = cell.index('\n')
