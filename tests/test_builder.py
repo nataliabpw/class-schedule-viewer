@@ -50,7 +50,7 @@ def test_build_group_schedule_for_group_1():
         end_row=df.shape[0],
         matching_date_columns=[0, 1],
         df=df,
-        group_seminaria="grupa 1",
+        group_seminaria="1",
         group_cwiczenia=" 1a",
         group_zajecia=" 1b"
     )
