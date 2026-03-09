@@ -38,12 +38,12 @@ The frontend then renders the schedule as a clear table.
 ![App demo](docs/demo.gif)
 
 ### Desktop view
-![Desktop view](docs/desktop.png)
+![Desktop view](docs/desktopView.png)
 
 ### Mobile view
 <p align="center">
-  <img src="docs/mobile1.png" height="400">
-  <img src="docs/mobile2.png" height="400">
+  <img src="docs/mobileView1.png" height="400">
+  <img src="docs/mobileView2.png" height="400">
 </p>
 
 
@@ -162,7 +162,7 @@ This change reduced the average request response time by approximately **90×**.
 
 Clone the repository:
 ```bash
-git clone https://github.com/YOUR_USERNAME/class-schedule-viewer.git
+git clone https://github.com/nataliabpw/class-schedule-viewer.git
 cd class-schedule-viewer
 ```
 
